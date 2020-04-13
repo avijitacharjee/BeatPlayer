@@ -23,7 +23,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.utils.PlayerConstants.ARTWORK_URI
-import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 
@@ -99,25 +98,13 @@ object GeneralUtils {
         return hours * (1000 * 60 * 60) + minutes * (1000 * 60) + seconds * 1000
     }
 
-    @Throws(FileNotFoundException::class)
     fun audio2Raw(context: Context, uri: Uri): ByteArray? {
         val parcelFileDescriptor = try {
             context.contentResolver.openFileDescriptor(uri, "r", null) ?: return null
         } catch (ex: FileNotFoundException) {
             return null
         }
-
-        val fis = FileInputStream(parcelFileDescriptor.fileDescriptor)
-        val bos = ByteArrayOutputStream()
-        val b = ByteArray(1024)
-
-        var readNum = fis.read(b)
-
-        while (readNum != -1) {
-            bos.write(b, 0, readNum)
-            readNum = fis.read(b)
-        }
-        return bos.toByteArray()
+        return FileInputStream(parcelFileDescriptor.fileDescriptor).readBytes()
     }
 
     fun toggleShowKeyBoard(context: Context?, editText: EditText, show: Boolean) {
