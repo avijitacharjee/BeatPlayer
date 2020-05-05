@@ -24,13 +24,6 @@ import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import com.crrl.alertdialog.AlertDialog
-import com.crrl.alertdialog.dialogs.AlertItemAction
-import com.crrl.alertdialog.stylers.AlertItemStyle
-import com.crrl.alertdialog.stylers.AlertItemTheme
-import com.crrl.alertdialog.stylers.AlertType
-import com.crrl.alertdialog.stylers.InputStyle
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.interfaces.ItemClickListener
@@ -39,25 +32,27 @@ import com.crrl.beatplayer.models.Playlist
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.repository.PlaylistRepository
 import com.crrl.beatplayer.repository.SongsRepository
-import com.crrl.beatplayer.ui.activities.MainActivity
 import com.crrl.beatplayer.ui.activities.SelectSongActivity
 import com.crrl.beatplayer.ui.fragments.FavoriteDetailFragment
 import com.crrl.beatplayer.ui.fragments.PlaylistDetailFragment
 import com.crrl.beatplayer.ui.viewmodels.FavoriteViewModel
 import com.crrl.beatplayer.ui.viewmodels.MainViewModel
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
+import com.crrl.beatplayer.ui.widgets.AlertDialog
+import com.crrl.beatplayer.ui.widgets.actions.AlertItemAction
+import com.crrl.beatplayer.ui.widgets.stylers.AlertItemStyle
+import com.crrl.beatplayer.ui.widgets.stylers.AlertItemTheme
+import com.crrl.beatplayer.ui.widgets.stylers.AlertType
+import com.crrl.beatplayer.ui.widgets.stylers.InputStyle
 import com.crrl.beatplayer.utils.GeneralUtils.addZeros
 import com.crrl.beatplayer.utils.PlayerConstants
 import com.crrl.beatplayer.utils.PlayerConstants.FAVORITE_ID
-import com.crrl.beatplayer.utils.SettingsUtility
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.skydoves.powermenu.MenuAnimation
 import com.skydoves.powermenu.OnMenuItemClickListener
 import com.skydoves.powermenu.PowerMenu
 import com.skydoves.powermenu.PowerMenuItem
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.core.parameter.parametersOf
 
 
 open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<T> {
@@ -136,6 +131,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
             textColor = safeActivity.getColorByTheme(R.attr.titleTextColor)
             selectedTextColor = safeActivity.getColorByTheme(R.attr.colorAccent)
             backgroundColor = safeActivity.getColorByTheme(R.attr.colorPrimarySecondary2)
+            cornerRadius = resources.getDimension(R.dimen.bottom_panel_radius)
         }
         return AlertDialog(
             getString(R.string.sort_title),
@@ -156,7 +152,8 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
             safeActivity.getColorByTheme(R.attr.colorAccent),
             text ?: "${safeActivity.getString(R.string.playlist)} ${addZeros(
                 PlaylistRepository(context).getPlayListsCount() + 1
-            )}"
+            )}",
+            resources.getDimension(R.dimen.bottom_panel_radius)
         )
         AlertDialog(
             getString(R.string.new_playlist),
@@ -165,7 +162,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
             AlertType.INPUT,
             getString(R.string.input_hint)
         ).apply {
-            addItem(AlertItemAction("Cancel", false, AlertItemTheme.CANCEL) {
+            addItem(AlertItemAction("Cancel", false, AlertItemTheme.DEFAULT) {
             })
             addItem(AlertItemAction("OK", false, AlertItemTheme.ACCEPT) { action ->
                 val exists = playlistViewModel.exists(action.input!!)
@@ -242,8 +239,9 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
 
     private fun createConfDialog(song: Song): AlertDialog {
         val style = AlertItemStyle().apply {
-            textColor = activity?.getColorByTheme(R.attr.titleTextColor)!!
-            selectedTextColor = activity?.getColorByTheme(R.attr.colorAccent)!!
+            textColor = safeActivity.getColorByTheme(R.attr.titleTextColor)
+            selectedTextColor = safeActivity.getColorByTheme(R.attr.colorAccent)
+            selectedBackgroundColor = safeActivity.getColorByTheme(R.attr.colorAccentOpacity)
             backgroundColor =
                 activity?.getColorByTheme(R.attr.colorPrimarySecondary2)!!
         }

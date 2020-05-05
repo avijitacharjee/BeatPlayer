@@ -19,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentAlbumDetailBinding
 import com.crrl.beatplayer.extensions.*
@@ -70,6 +71,7 @@ class AlbumDetailFragment : BaseFragment<Song>() {
                 layoutManager = LinearLayoutManager(context)
                 clipToOutline = true
                 adapter = songAdapter
+                (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
             }
             addFavorites.setOnClickListener { toggleAddFav() }
         }

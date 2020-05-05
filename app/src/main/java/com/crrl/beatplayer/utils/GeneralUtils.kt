@@ -17,6 +17,9 @@ import android.content.ContentUris.withAppendedId
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.RectF
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RoundRectShape
 import android.net.Uri
 import android.view.Surface.*
 import android.view.View
@@ -150,7 +153,8 @@ object GeneralUtils {
     }
 
     fun getBlackWhiteColor(color: Int): Int {
-        val darkness= 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
+        val darkness =
+            1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
         return if (darkness >= 0.5) {
             Color.WHITE
         } else Color.BLACK
@@ -166,6 +170,57 @@ object GeneralUtils {
             view!!.context.getString(message),
             BaseTransientBottomBar.LENGTH_SHORT,
             custom = custom
+        )
+    }
+
+    /**
+     * This method draws a round rect shape.
+     * @param width: int
+     * @param height: int
+     * @param color: int
+     * @return ShapeDrawable
+     */
+    fun drawRoundRectShape(
+        width: Int,
+        height: Int,
+        color: Int,
+        radius: Float = 30f
+    ): ShapeDrawable {
+        val r = floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius)
+        val oval = ShapeDrawable(RoundRectShape(r, RectF(), r))
+        oval.intrinsicHeight = height
+        oval.intrinsicWidth = width
+        oval.paint.color = color
+        return oval
+    }
+
+    private fun getFormattedText(targetText: String, text: String?): String {
+        val formattedText = StringBuilder()
+        targetText.mapIndexed { index, targetChar ->
+            if (index < text!!.length)
+                if (targetChar.equals(text[index], true)) {
+                    formattedText.append(targetChar)
+                }
+        }
+        return formattedText.toString()
+    }
+
+    fun tintMatchedText(song: Song, text: String?, color: String): Song {
+        val title = song.title.split("$text", ignoreCase = true)
+            .joinToString("<font color=\"$color\">${getFormattedText(song.title, text)}</font>")
+        return Song(
+            song.id,
+            song.albumId,
+            song.artistId,
+            title,
+            song.artist,
+            song.album,
+            song.duration,
+            song.trackNumber,
+            song.path,
+            song.isFav,
+            song.isSelected,
+            song.playListId
         )
     }
 

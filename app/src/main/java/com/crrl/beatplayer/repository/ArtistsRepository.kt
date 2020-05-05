@@ -53,33 +53,38 @@ class ArtistsRepository() : ArtistsRepositoryInterface {
     }
 
     override fun getArtist(id: Long): Artist? {
-        makeArtistCursor("_id=?", arrayOf(id.toString())).use {
-            return if (it.moveToFirst()) {
-                Artist.createFromCursor(it).apply { albumId = getAlbumId(this.id) }
-            } else {
-                Artist()
-            }
-        }
+        val albumList =
+            makeArtistCursor("artist_id=?", arrayOf(id.toString())).toList(
+                true,
+                Artist.Companion::createFromCursor
+            )
+        return toArtistList(albumList).first()
     }
 
     override fun getAllArtist(): List<Artist> {
-        val artistList =
-            makeArtistCursor(null, null).toList(true) {
-                Artist.createFromCursor(this)
-            }
-        SortModes.sortArtistList(artistList, settingsUtility.artistSortOrder)
+        val albumList =
+            makeArtistCursor(null, null).toList(true, Artist.Companion::createFromCursor)
+        return toArtistList(albumList)
+    }
+
+    private fun toArtistList(list: MutableList<Artist>): MutableList<Artist> {
+        val artistList = mutableListOf<Artist>()
+        list.groupBy { it.name }.map {
+            artistList.add(it.value.first().apply { albumCount = it.value.size })
+        }
         return artistList
     }
 
 
-    fun search(paramString: String, limit: Int): List<Artist> {
-        val results = makeArtistCursor("artist LIKE ?", arrayOf("$paramString%"))
-            .toList(true) { Artist.createFromCursor(this) }
+    fun search(paramString: String, limit: Int = Int.MAX_VALUE): List<Artist> {
+        val results = toArtistList(makeArtistCursor("artist LIKE ?", arrayOf("$paramString%"))
+            .toList(true) { Artist.createFromCursor(this) })
         if (results.size < limit) {
             val moreArtists = makeArtistCursor("artist LIKE ?", arrayOf("%_$paramString%"))
                 .toList(true) { Artist.createFromCursor(this) }
-            results += moreArtists
+            results += toArtistList(moreArtists)
         }
+
         return if (results.size < limit) {
             results
         } else {
@@ -96,17 +101,6 @@ class ArtistsRepository() : ArtistsRepositoryInterface {
         return makeAlbumForArtistCursor(artistId)
             .toList(true) { Album.createFromCursor(this, artistId) }
     }
-
-    private fun getAlbumId(id: Long): Long {
-        makeAlbumCursor("artist_id=?", arrayOf("$id")).use {
-            return if (it.moveToFirst()) {
-                it.getLong(0)
-            } else {
-                -1L
-            }
-        }
-    }
-
 
     private fun makeAlbumForArtistCursor(artistID: Long): Cursor? {
         if (artistID == -1L) {
@@ -126,11 +120,11 @@ class ArtistsRepository() : ArtistsRepositoryInterface {
         paramArrayOfString: Array<String>?
     ): Cursor {
         return contentResolver.query(
-            MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-            arrayOf("_id", "artist", "number_of_albums"),
+            MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+            arrayOf("artist_id", "_id", "artist"),
             selection,
             paramArrayOfString,
-            null
+            settingsUtility.artistSortOrder
         )!!
     }
 

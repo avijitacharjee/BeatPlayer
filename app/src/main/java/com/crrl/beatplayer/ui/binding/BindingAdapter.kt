@@ -14,9 +14,7 @@
 package com.crrl.beatplayer.ui.binding
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ContentUris
-import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import android.text.Html
@@ -32,11 +30,12 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.crrl.beatplayer.R
-import com.crrl.beatplayer.extensions.getColorByTheme
 import com.crrl.beatplayer.extensions.setMargins
+import com.crrl.beatplayer.extensions.setPaddings
 import com.crrl.beatplayer.extensions.toggleShow
 import com.crrl.beatplayer.models.Album
 import com.crrl.beatplayer.models.Favorite
+import com.crrl.beatplayer.models.SearchData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.utils.GeneralUtils
 import com.crrl.beatplayer.utils.PlayerConstants
@@ -60,10 +59,7 @@ fun setAlbumId(
 
     val uri = ContentUris.withAppendedId(PlayerConstants.ARTWORK_URI, albumId)
 
-    val drawable = getDrawable(view.context, R.drawable.ic_empty_cover).apply {
-        val context = view.context as Activity
-        this?.setTint(context.getColorByTheme(R.attr.colorAccent))
-    }
+    val drawable = getDrawable(view.context, R.drawable.ic_empty_cover)
     Glide.with(view)
         .load(uri)
         .transition(withCrossFade()).apply {
@@ -74,7 +70,6 @@ fun setAlbumId(
                         override fun onLoadCleared(placeholder: Drawable?) {
                             view.setImageDrawable(placeholder)
                         }
-
                         override fun onResourceReady(
                             resource: Drawable,
                             transition: Transition<in Drawable>?
@@ -83,12 +78,11 @@ fun setAlbumId(
                         }
                     })
             } else {
-                placeholder(R.drawable.mini_player_cover_frame)
+                placeholder(R.drawable.ic_empty_cover)
                     .error(R.drawable.ic_empty_cover)
                     .into(view)
             }
         }
-
 }
 
 @BindingAdapter("app:width", "app:height")
@@ -98,6 +92,11 @@ fun setImageSize(view: ImageView, width: Int, height: Int) {
         this.height = height
     }
     view.scaleType = ImageView.ScaleType.CENTER_CROP
+}
+
+@BindingAdapter("app:html")
+fun setTextHtml(view: TextView, html: String) {
+    view.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
 }
 
 @BindingAdapter("app:isFav")
@@ -164,6 +163,22 @@ fun setCount(view: TextView, type: String, count: Int) {
     )
 }
 
+@BindingAdapter("app:by", "app:data")
+fun setTextCount(view: TextView, type: String, data: SearchData) {
+    val count = when (type) {
+        ARTIST_TYPE -> data.artistList.size
+        ALBUM_TYPE -> data.albumList.size
+        else -> data.songList.size
+    }
+    val id = when (type) {
+        ARTIST_TYPE -> R.plurals.number_of_artists
+        ALBUM_TYPE -> R.plurals.number_of_albums
+        else -> R.plurals.number_of_songs
+    }
+    view.text = view.resources.getQuantityString(id, count, count)
+}
+
+
 @SuppressLint("SetTextI18n")
 @BindingAdapter("app:album")
 fun fixArtistLength(view: TextView, album: Album) {
@@ -186,10 +201,13 @@ fun setClipToOutline(view: View, clipToOutline: Boolean) {
     view.clipToOutline = clipToOutline
 }
 
-@BindingAdapter("app:position")
-fun setBackgroundByPosition(view: View, position: Int) {
+@BindingAdapter("app:position", "app:size", "app:isSearch", requireAll = false)
+fun setBackgroundByPosition(view: View, position: Int, size: Int, isSearch: Boolean = false) {
     when (position) {
         0 -> view.setBackgroundResource(R.drawable.list_item_ripple_top)
+        size - 1 -> if (isSearch) {
+            view.setBackgroundResource(R.drawable.list_item_ripple_bottom)
+        } else view.setBackgroundResource(R.drawable.list_item_ripple_middle)
         else -> view.setBackgroundResource(R.drawable.list_item_ripple_middle)
     }
 }
@@ -200,8 +218,15 @@ fun textUnderline(view: TextView, textUnderline: Boolean) {
         view.text = Html.fromHtml("<u>${view.text}</u>", Html.FROM_HTML_MODE_LEGACY)
 }
 
+@BindingAdapter("app:type")
+fun setMarginByType(view: View, type: String) {
+    val padding = view.resources.getDimensionPixelSize(R.dimen.padding_12)
+    when (type) {
+        ARTIST_TYPE, ALBUM_TYPE -> view.setPaddings(top = padding, right = padding)
+    }
+}
 
-@BindingAdapter("app:visible", requireAll = false)
+@BindingAdapter("app:visible")
 fun setVisibility(view: View, visible: Boolean = true) {
     view.toggleShow(visible)
 }

@@ -17,7 +17,6 @@ import android.content.Context
 import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.R
@@ -26,14 +25,11 @@ import com.crrl.beatplayer.databinding.AlbumItemHeaderBinding
 import com.crrl.beatplayer.databinding.ArtistDetailItemBinding
 import com.crrl.beatplayer.extensions.deepEquals
 import com.crrl.beatplayer.extensions.inflateWithBinding
-import com.crrl.beatplayer.extensions.observe
-import com.crrl.beatplayer.extensions.setCustomColor
 import com.crrl.beatplayer.interfaces.ItemClickListener
 import com.crrl.beatplayer.models.Album
 import com.crrl.beatplayer.ui.viewmodels.MainViewModel
 import com.crrl.beatplayer.utils.GeneralUtils.dip2px
 import com.crrl.beatplayer.utils.GeneralUtils.screenWidth
-import com.crrl.beatplayer.utils.SettingsUtility
 
 private const val HEADER_TYPE = 0
 private const val ITEM_TYPE = 1
@@ -41,13 +37,13 @@ private const val ITEM_TYPE = 1
 class AlbumAdapter(private val context: Context?, private val mainViewModel: MainViewModel) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var albumList: MutableList<Album> = mutableListOf()
     private var lastClick = 0L
 
+    var albumList: MutableList<Album> = mutableListOf()
     var showHeader = false
     var artistDetail = false
     var itemClickListener: ItemClickListener<Album>? = null
-    var spanCount: Int = 1
+    var spanCount: Int = 2
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemId = if (artistDetail) R.layout.artist_detail_item else R.layout.album_item
@@ -131,6 +127,7 @@ class AlbumAdapter(private val context: Context?, private val mainViewModel: Mai
             else {
                 (binding as ArtistDetailItemBinding).apply {
                     this.album = album
+                    this.size = itemCount
                     binding.executePendingBindings()
 
                     binding.root.setOnClickListener(this@ViewHolderAlbum)

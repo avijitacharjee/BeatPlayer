@@ -19,6 +19,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentFolderDetailBinding
 import com.crrl.beatplayer.extensions.inflateWithBinding
@@ -98,6 +99,7 @@ class FolderDetailFragment : BaseFragment<Song>() {
             songList.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = songAdapter
+                (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
             }
             addFavorites.setOnClickListener { toggleAddFav() }
         }

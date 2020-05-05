@@ -15,12 +15,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="playlist"
             type="com.crrl.beatplayer.models.Playlist" />
         <variable
             name="position"
+            type="Integer" />
+
+        <variable
+            name="size"
             type="Integer" />
     </data>
 
@@ -29,6 +32,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:position="@{position}"
+        app:size="@{size}"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingTop="8dp"

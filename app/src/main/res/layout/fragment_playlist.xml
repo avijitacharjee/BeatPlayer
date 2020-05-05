@@ -53,7 +53,7 @@
             android:layout_height="@dimen/btn_size"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="150dp"
+            android:layout_marginBottom="180dp"
             android:background="@drawable/btn_play_background"
             android:contentDescription="@string/cover"
             android:elevation="3dp"

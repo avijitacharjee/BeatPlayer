@@ -21,13 +21,10 @@ import androidx.viewpager.widget.ViewPager
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentLibraryBinding
 import com.crrl.beatplayer.extensions.inflateWithBinding
-import com.crrl.beatplayer.extensions.observe
 import com.crrl.beatplayer.extensions.safeActivity
-import com.crrl.beatplayer.extensions.setCustomColor
 import com.crrl.beatplayer.ui.activities.MainActivity
 import com.crrl.beatplayer.ui.adapters.ViewPagerAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseSongDetailFragment
-import com.crrl.beatplayer.ui.transformers.ZoomOutPageTransformer
 import com.crrl.beatplayer.utils.SettingsUtility
 
 
@@ -60,12 +57,12 @@ class LibraryFragment : BaseSongDetailFragment() {
         val listSortModeAdapter = ViewPagerAdapter(safeActivity.supportFragmentManager)
 
         listSortModeAdapter.apply {
+            addFragment(FavoriteFragment(), getString(R.string.favorites))
             addFragment(SongFragment(), getString(R.string.songs))
             addFragment(AlbumFragment(), getString(R.string.albums))
             addFragment(ArtistFragment(), getString(R.string.artists))
             addFragment(PlaylistFragment(), getString(R.string.playlists))
             addFragment(FolderFragment(), getString(R.string.folders))
-            addFragment(FavoriteFragment(), getString(R.string.favorites))
         }
 
         binding.apply {

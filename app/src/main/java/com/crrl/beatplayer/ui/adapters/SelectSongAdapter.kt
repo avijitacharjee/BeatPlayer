@@ -19,10 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.SelectSongItemBinding
 import com.crrl.beatplayer.extensions.inflateWithBinding
-import com.crrl.beatplayer.extensions.setCustomColor
 import com.crrl.beatplayer.interfaces.ItemClickListener
 import com.crrl.beatplayer.models.Song
-import com.crrl.beatplayer.utils.SettingsUtility
 
 class SelectSongAdapter(
     private val itemClickListener: ItemClickListener<Song>
@@ -59,6 +57,8 @@ class SelectSongAdapter(
         fun bind(song: Song) {
             binding.apply {
                 this.song = song
+                this.position = adapterPosition
+                this.size = itemCount
                 executePendingBindings()
 
                 container.setOnClickListener(this@ViewHolderSong)

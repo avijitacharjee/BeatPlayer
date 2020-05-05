@@ -22,19 +22,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentFavoriteDetailBinding
-import com.crrl.beatplayer.extensions.*
+import com.crrl.beatplayer.extensions.inflateWithBinding
+import com.crrl.beatplayer.extensions.observe
+import com.crrl.beatplayer.extensions.safeActivity
+import com.crrl.beatplayer.extensions.toIDList
 import com.crrl.beatplayer.models.Song
-import com.crrl.beatplayer.repository.FavoritesRepository
-import com.crrl.beatplayer.ui.activities.MainActivity
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
 import com.crrl.beatplayer.ui.viewmodels.FavoriteViewModel
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
-import com.crrl.beatplayer.ui.viewmodels.SongViewModel
 import com.crrl.beatplayer.utils.PlayerConstants
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.core.parameter.parametersOf
 
 class FavoriteDetailFragment : BaseFragment<Song>() {
 
@@ -95,6 +93,7 @@ class FavoriteDetailFragment : BaseFragment<Song>() {
             songList.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = songAdapter
+                (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
             }
         }
 

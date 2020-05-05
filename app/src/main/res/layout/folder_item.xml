@@ -15,13 +15,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="folder"
             type="com.crrl.beatplayer.models.Folder" />
-
         <variable
             name="position"
+            type="Integer" />
+
+        <variable
+            name="size"
             type="Integer" />
     </data>
 
@@ -30,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:position="@{position}"
+        app:size="@{size}"
         android:clickable="true"
         android:focusable="true">
 

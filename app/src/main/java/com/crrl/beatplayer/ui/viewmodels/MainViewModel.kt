@@ -44,7 +44,9 @@ class MainViewModel(
     private val rawLiveData = MutableLiveData<ByteArray>()
     private val currentSongList = MutableLiveData<LongArray>()
     private val isFavLiveData = MutableLiveData<Boolean>()
+    private val isAlbumFavLiveData = MutableLiveData<Boolean>()
     private val isSongFavLiveData = MutableLiveData<Boolean>()
+    private val currentListName = MutableLiveData<String>()
     private val lyrics: MutableLiveData<String> = MutableLiveData()
     private val lastSong = MutableLiveData<Song>()
 
@@ -66,6 +68,16 @@ class MainViewModel(
             isFavLiveData.postValue(isFav)
         }
         return isFavLiveData
+    }
+
+    fun isAlbumFav(id: Long): LiveData<Boolean> {
+        launch {
+            val isFav = withContext(IO) {
+                favoritesRepository.favExist(id)
+            }
+            isAlbumFavLiveData.postValue(isFav)
+        }
+        return isAlbumFavLiveData
     }
 
     fun isSongFav(id: Long): LiveData<Boolean> {
@@ -105,6 +117,10 @@ class MainViewModel(
     fun random(currentSong: Long): Song {
         currentSongList.value ?: return Song()
         return songRepository.getSongForId(musicService.random(currentSong))
+    }
+
+    fun update(currentList: String) {
+        currentListName.value = currentList
     }
 
     fun update(newTime: Int) {

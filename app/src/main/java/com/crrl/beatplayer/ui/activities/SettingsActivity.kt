@@ -13,28 +13,22 @@
 
 package com.crrl.beatplayer.ui.activities
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
-import com.crrl.alertdialog.AlertDialog
-import com.crrl.alertdialog.dialogs.AlertItemAction
-import com.crrl.alertdialog.stylers.AlertItemStyle
-import com.crrl.alertdialog.stylers.AlertItemTheme
-import com.crrl.alertdialog.stylers.AlertType
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.ActivitySettingsBinding
-import com.crrl.beatplayer.databinding.FragmentSongDetailBinding
 import com.crrl.beatplayer.extensions.getColorByTheme
-import com.crrl.beatplayer.extensions.observe
-import com.crrl.beatplayer.extensions.setCustomColor
 import com.crrl.beatplayer.ui.activities.base.BaseActivity
 import com.crrl.beatplayer.ui.viewmodels.MainViewModel
+import com.crrl.beatplayer.ui.widgets.AlertDialog
+import com.crrl.beatplayer.ui.widgets.actions.AlertItemAction
+import com.crrl.beatplayer.ui.widgets.stylers.AlertItemStyle
+import com.crrl.beatplayer.ui.widgets.stylers.AlertItemTheme
+import com.crrl.beatplayer.ui.widgets.stylers.AlertType
 import com.crrl.beatplayer.utils.PlayerConstants
 import com.crrl.beatplayer.utils.SettingsUtility
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class SettingsActivity : BaseActivity() {
 
@@ -106,6 +100,9 @@ class SettingsActivity : BaseActivity() {
     }
 
     fun showThemes(view: View) {
-        try { dialog.show(this) } catch (ex: IllegalStateException){}
+        try {
+            dialog.show(this)
+        } catch (ex: IllegalStateException) {
+        }
     }
 }

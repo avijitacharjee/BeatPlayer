@@ -13,6 +13,7 @@
 
 package com.crrl.beatplayer.ui.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.crrl.beatplayer.models.SearchData
 import com.crrl.beatplayer.repository.AlbumsRepository
@@ -35,9 +36,9 @@ class SearchViewModel(
         if (searchString.isNotEmpty()) {
             launch {
                 val songs = withContext(Dispatchers.IO) {
-                    songRepository.searchSongs(searchString, 10).toMutableList()
+                    songRepository.search(searchString, 10).toMutableList()
                 }
-                if (songs.isNotEmpty()) searchData.songList = songs
+                searchData.songList = songs
                 searchLiveData.postValue(searchData)
             }
 
@@ -45,7 +46,7 @@ class SearchViewModel(
                 val albums = withContext(Dispatchers.IO) {
                     albumRepository.search(searchString, 10).toMutableList()
                 }
-                if (albums.isNotEmpty()) searchData.albumList = albums
+                searchData.albumList = albums
                 searchLiveData.postValue(searchData)
             }
 
@@ -53,7 +54,7 @@ class SearchViewModel(
                 val artist = withContext(Dispatchers.IO) {
                     artistsRepository.search(searchString, 10).toMutableList()
                 }
-                if (artist.isNotEmpty()) searchData.artistList = artist
+                searchData.artistList = artist
                 searchLiveData.postValue(searchData)
             }
         } else {
@@ -61,5 +62,8 @@ class SearchViewModel(
         }
     }
 
-    fun searchLiveData() = searchLiveData
+    fun searchLiveData(): LiveData<SearchData> {
+        if (searchLiveData.value == null) searchLiveData.value = SearchData()
+        return searchLiveData
+    }
 }

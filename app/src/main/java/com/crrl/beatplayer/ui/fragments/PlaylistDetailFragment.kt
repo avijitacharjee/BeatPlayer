@@ -24,11 +24,9 @@ import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentPlaylistDetailBinding
 import com.crrl.beatplayer.extensions.inflateWithBinding
 import com.crrl.beatplayer.extensions.observe
-import com.crrl.beatplayer.extensions.setCustomColor
 import com.crrl.beatplayer.extensions.toIDList
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.repository.PlaylistRepository
-import com.crrl.beatplayer.ui.activities.MainActivity
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
@@ -70,6 +68,7 @@ class PlaylistDetailFragment : BaseFragment<Song>() {
         binding.songList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = songAdapter
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
 
         playlistViewModel.getSongs(binding.playlist!!.id).observe(this) {

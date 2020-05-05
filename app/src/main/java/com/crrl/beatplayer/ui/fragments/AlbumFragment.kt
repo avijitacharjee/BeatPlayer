@@ -20,8 +20,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.crrl.alertdialog.dialogs.AlertItemAction
-import com.crrl.alertdialog.stylers.AlertItemTheme
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentAlbumBinding
 import com.crrl.beatplayer.extensions.addFragment
@@ -32,6 +30,8 @@ import com.crrl.beatplayer.models.Album
 import com.crrl.beatplayer.ui.adapters.AlbumAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
 import com.crrl.beatplayer.ui.viewmodels.AlbumViewModel
+import com.crrl.beatplayer.ui.widgets.actions.AlertItemAction
+import com.crrl.beatplayer.ui.widgets.stylers.AlertItemTheme
 import com.crrl.beatplayer.utils.GeneralUtils
 import com.crrl.beatplayer.utils.GeneralUtils.VERTICAL
 import com.crrl.beatplayer.utils.PlayerConstants

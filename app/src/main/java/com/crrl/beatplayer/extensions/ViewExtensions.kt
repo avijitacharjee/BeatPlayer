@@ -18,7 +18,6 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -38,9 +37,7 @@ import com.budiyev.android.circularprogressbar.CircularProgressBar
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.ui.widgets.SimpleCustomSnackbar
 import com.crrl.beatplayer.utils.GeneralUtils
-import com.github.florent37.kotlin.pleaseanimate.please
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.*
 import rm.com.audiowave.AudioWaveView
 
 
@@ -88,6 +85,20 @@ fun View.setMargins(
     )
 
     layoutParams = lp
+}
+
+fun View.setPaddings(
+    left: Int? = null,
+    top: Int? = null,
+    right: Int? = null,
+    bottom: Int? = null
+) {
+    setPadding(
+        left ?: paddingLeft,
+        top ?: paddingTop,
+        right ?: paddingRight,
+        bottom ?: paddingBottom
+    )
 }
 
 fun View?.animateScale(from: Float, to: Float, dur: Long) {

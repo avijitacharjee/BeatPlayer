@@ -13,6 +13,9 @@
 
 package com.crrl.beatplayer.models
 
+import com.crrl.beatplayer.utils.PlayerConstants.ALBUM_TYPE
+import com.crrl.beatplayer.utils.PlayerConstants.ARTIST_TYPE
+
 data class SearchData(
     var songList: MutableList<Song> = mutableListOf(),
     var albumList: MutableList<Album> = mutableListOf(),
@@ -20,7 +23,15 @@ data class SearchData(
 ) {
 
     fun isNotEmpty(): Boolean {
-        return songList.isNotEmpty() || albumList.isNotEmpty()
+        return isNotSongListEmpty() || isNotAlbumListEmpty() || isNotArtistListEmpty()
+    }
+
+    fun isNotEmpty(type: String): Boolean {
+        return when (type) {
+            ALBUM_TYPE -> isNotAlbumListEmpty()
+            ARTIST_TYPE -> isNotArtistListEmpty()
+            else -> isNotSongListEmpty()
+        }
     }
 
     fun isNotSongListEmpty(): Boolean {

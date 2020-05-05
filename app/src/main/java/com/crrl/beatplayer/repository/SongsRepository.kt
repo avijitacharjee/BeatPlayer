@@ -14,7 +14,6 @@
 package com.crrl.beatplayer.repository
 
 import android.annotation.SuppressLint
-import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns._ID
@@ -29,7 +28,7 @@ import java.io.File
 interface SongsRepositoryInterface {
     fun loadSongs(): List<Song>
     fun getSongForId(id: Long): Song
-    fun searchSongs(searchString: String, limit: Int): List<Song>
+    fun search(searchString: String, limit: Int = Int.MAX_VALUE): List<Song>
     fun deleteTracks(ids: LongArray): Int
 }
 
@@ -56,7 +55,7 @@ class SongsRepository(private val context: Context?) : SongsRepositoryInterface 
         }
     }
 
-    override fun searchSongs(searchString: String, limit: Int): List<Song> {
+    override fun search(searchString: String, limit: Int): List<Song> {
         val result = makeSongCursor("title LIKE ?", arrayOf("$searchString%"))
             .toList(true) { Song.createFromCursor(this) }
         if (result.size < limit) {

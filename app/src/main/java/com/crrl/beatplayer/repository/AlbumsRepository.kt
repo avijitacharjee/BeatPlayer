@@ -13,7 +13,6 @@
 
 package com.crrl.beatplayer.repository
 
-import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
@@ -63,7 +62,7 @@ class AlbumsRepository(context: Context?) : AlbumsRepositoryInterface {
         return sl
     }
 
-    fun search(paramString: String, limit: Int): List<Album> {
+    fun search(paramString: String, limit: Int = Int.MAX_VALUE): List<Album> {
         val result = makeAlbumCursor("album LIKE ?", arrayOf("$paramString%"))
             .toList(true) { Album.createFromCursor(this) }
         if (result.size < limit) {

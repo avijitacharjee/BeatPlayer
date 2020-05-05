@@ -19,8 +19,16 @@
             name="song"
             type="com.crrl.beatplayer.models.Song" />
         <variable
+            name="size"
+            type="Integer" />
+
+        <variable
             name="position"
             type="Integer" />
+
+        <variable
+            name="isSearch"
+            type="Boolean" />
     </data>
 
     <RelativeLayout
@@ -28,6 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:position="@{position}"
+        app:isSearch="@{isSearch}"
+        app:size="@{size}"
         android:clickable="true"
         android:focusable="true">
 
@@ -72,7 +82,7 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginBottom="4dp"
                     android:maxLines="1"
-                    android:text="@{song.title}"
+                    app:html="@{song.title}"
                     android:textColor="?titleTextColor"
                     android:textSize="@dimen/title_text_size" />
             </RelativeLayout>

@@ -57,6 +57,7 @@ class FolderAdapter(private val context: Context?) :
         fun bind(folder: Folder) {
             binding.apply {
                 this.folder = folder
+                this.size = itemCount
                 position = adapterPosition
                 itemMenu.setOnClickListener(this@ViewHolder)
                 container.setOnClickListener(this@ViewHolder)

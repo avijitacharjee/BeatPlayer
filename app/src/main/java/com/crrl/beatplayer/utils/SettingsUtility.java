@@ -15,7 +15,6 @@ package com.crrl.beatplayer.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -84,7 +83,7 @@ public final class SettingsUtility {
     }
 
     public int getStartPageIndexSelected() {
-        return sPreferences.getInt(LAST_OPTION_SELECTED_KEY, 0);
+        return sPreferences.getInt(LAST_OPTION_SELECTED_KEY, 1);
     }
 
     public void setStartPageIndexSelected(int value) {
